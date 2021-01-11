@@ -81,7 +81,6 @@ export default {
   &__title
     text-transform: uppercase
     margin: 0
-
 .box-students
   &__age,&__courses
     font-weight: bold
@@ -92,7 +91,6 @@ export default {
     align-items: center
   &__firstName,&__lastName
     font-size: 18px
-
 .box-item
   display: flex
   align-items: center
@@ -101,8 +99,6 @@ export default {
   padding: 10px
   margin-bottom: 10px
   border-radius: 10px
-
 .btn-floating.btn-large
   font-size: 30px
-
 </style>

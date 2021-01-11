@@ -8,7 +8,7 @@ const loadCourses = async () => {
 }
 
 const loadStudents = async () => {
-  return (await studentsModule(instance).getAll()).data;
+  return (await studentsModule(instance).getAllStudents()).data;
 }
 
 export default {

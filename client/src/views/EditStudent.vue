@@ -4,33 +4,33 @@
 
     <div v-if="submitted">
       <div v-if="responseStatusCode" class="materialert success">
-        {{ this.responseMsg }}
+        {{ this.responseMessage }}
       </div>
 
       <div v-else class="materialert error">
-        {{ this.responseMsg }}
+        {{ this.responseMessage }}
       </div>
     </div>
 
     <div class="row">
       <form
-          @submit.prevent="changeStudent"
+          @submit.prevent="editStudent"
           class="col s12"
       >
         <div class="row">
           <div class="input-field col s12">
             <input
                 id="student_firstName"
-                v-model.trim="form.first_name"
+                v-model.trim="form.firstName"
                 name="student_firstName"
                 type="text"
                 class="validate"
-                :class="$v.form.first_name.$error ? 'invalid-feedback' : ''"
+                :class="$v.form.firstName.$error ? 'invalid-feedback' : ''"
             >
             <label for="student_firstName">First name student</label>
-            <p v-if="$v.form.first_name.$dirty && !$v.form.first_name.required" class="invalid-feedback">Invalid student
+            <p v-if="$v.form.firstName.$dirty && !$v.form.firstName.required" class="invalid-feedback">Invalid student
               firstName!</p>
-            <p v-if="$v.form.first_name.$dirty && !$v.form.first_name.minLength" class="invalid-feedback">Enter a long
+            <p v-if="$v.form.firstName.$dirty && !$v.form.firstName.minLength" class="invalid-feedback">Enter a long
               firstName!</p>
           </div>
         </div>
@@ -38,16 +38,16 @@
           <div class="input-field col s12">
             <input
                 id="student_lastName"
-                v-model.trim="form.last_name"
+                v-model.trim="form.lastName"
                 name="student_lastName"
                 type="text"
                 class="validate"
-                :class="$v.form.last_name.$error ? 'invalid-feedback' : ''"
+                :class="$v.form.lastName.$error ? 'invalid-feedback' : ''"
             >
             <label for="student_lastName">Last name student</label>
-            <p v-if="$v.form.last_name.$dirty && !$v.form.last_name.required" class="invalid-feedback">Invalid student
+            <p v-if="$v.form.lastName.$dirty && !$v.form.lastName.required" class="invalid-feedback">Invalid student
               lastName!</p>
-            <p v-if="$v.form.last_name.$dirty && !$v.form.last_name.minLength" class="invalid-feedback">Enter a long
+            <p v-if="$v.form.lastName.$dirty && !$v.form.lastName.minLength" class="invalid-feedback">Enter a long
               lastName!</p>
           </div>
         </div>
@@ -84,41 +84,42 @@ export default {
   data() {
     return {
       form: {
-        first_name: '',
-        last_name: '',
+        firstName: '',
+        lastName: '',
         age: '',
         profile_id: this.$route.params.profile_id,
       },
       responseStatusCode: null,
-      responseMsg: null,
+      responseMessage: null,
       submitted: false,
     }
   },
   validations: {
     form: {
-      first_name: {required, minLength: minLength(3)},
-      last_name: {required, minLength: minLength(3)},
+      firstName: {required, minLength: minLength(3)},
+      lastName: {required, minLength: minLength(3)},
       age: {required},
     }
   },
   methods: {
-    async changeStudent() {
+    async editStudent() {
       this.$v.form.$touch();
 
       if (!this.$v.form.$error) {
         this.submitted = true;
         const {...form} = this.form;
         try {
-          let res = await studentsModule(instance).changeStudent({
-            first_name: form.first_name,
-            last_name: form.last_name,
+          let res = await studentsModule(instance).editStudent({
+            first_name: form.firstName,
+            last_name: form.lastName,
             age: form.age,
           }, form.profile_id);
+
           this.responseStatusCode = res.data.status;
-          this.responseMsg = res.data.message;
+          this.responseMessage = res.data.message;
         } catch (err) {
           this.responseStatusCode = err.response.data.status;
-          this.responseMsg = err.response.data.message;
+          this.responseMessage = err.response.data.message;
         }
 
         if (this.responseStatusCode) {
@@ -154,12 +155,10 @@ export default {
 
 #course_name.invalid-feedback
   border-bottom: 1px solid red
-
 $var1: #039be5
 $var2: #ffffff
 $var3: #43a047
 $var4: #c62828
-
 html
   line-height: 1.5
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif

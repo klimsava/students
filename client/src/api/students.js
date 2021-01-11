@@ -2,7 +2,7 @@ const qs = require('querystring');
 
 export default function (instance) {
   return {
-    getAll() {
+    getAllStudents() {
       return instance.get('/api/students/');
     },
     removeStudent(id) {
@@ -11,10 +11,10 @@ export default function (instance) {
     addStudent(payload) {
       return instance.post('api/students/', qs.stringify(payload));
     },
-    changeStudent(payload, id) {
+    editStudent(payload, id) {
       return instance.put(`api/students/${id}`, qs.stringify(payload));
     },
-    selectedCourse(payload) {
+    selectCourse(payload) {
       return instance.post(`api/students/chosen-course`, qs.stringify(payload));
     }
   }

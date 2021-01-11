@@ -4,33 +4,33 @@
 
     <div v-if="submitted">
       <div v-if="responseStatusCode" class="materialert success">
-        {{ this.responseMsg }}
+        {{ this.responseMessage }}
       </div>
 
       <div v-else class="materialert error">
-        {{ this.responseMsg }}
+        {{ this.responseMessage }}
       </div>
     </div>
 
     <div class="row">
       <form
-          @submit.prevent="submitStudent"
+          @submit.prevent="addStudent"
           class="col s12"
       >
         <div class="row">
           <div class="input-field col s12">
             <input
                 id="student_firstName"
-                v-model.trim="form.first_name"
+                v-model.trim="form.firstName"
                 name="student_firstName"
                 type="text"
                 class="validate"
-                :class="$v.form.first_name.$error ? 'invalid-feedback' : ''"
+                :class="$v.form.firstName.$error ? 'invalid-feedback' : ''"
             >
             <label for="student_firstName">First name student</label>
-            <p v-if="$v.form.first_name.$dirty && !$v.form.first_name.required" class="invalid-feedback">Invalid student
+            <p v-if="$v.form.firstName.$dirty && !$v.form.firstName.required" class="invalid-feedback">Invalid student
               firstName!</p>
-            <p v-if="$v.form.first_name.$dirty && !$v.form.first_name.minLength" class="invalid-feedback">Enter a long
+            <p v-if="$v.form.firstName.$dirty && !$v.form.firstName.minLength" class="invalid-feedback">Enter a long
               firstName!</p>
           </div>
         </div>
@@ -38,16 +38,16 @@
           <div class="input-field col s12">
             <input
                 id="student_lastName"
-                v-model.trim="form.last_name"
+                v-model.trim="form.lastName"
                 name="student_lastName"
                 type="text"
                 class="validate"
-                :class="$v.form.last_name.$error ? 'invalid-feedback' : ''"
+                :class="$v.form.lastName.$error ? 'invalid-feedback' : ''"
             >
             <label for="student_lastName">Last name student</label>
-            <p v-if="$v.form.last_name.$dirty && !$v.form.last_name.required" class="invalid-feedback">Invalid student
+            <p v-if="$v.form.lastName.$dirty && !$v.form.lastName.required" class="invalid-feedback">Invalid student
               lastName!</p>
-            <p v-if="$v.form.last_name.$dirty && !$v.form.last_name.minLength" class="invalid-feedback">Enter a long
+            <p v-if="$v.form.lastName.$dirty && !$v.form.lastName.minLength" class="invalid-feedback">Enter a long
               lastName!</p>
           </div>
         </div>
@@ -56,7 +56,7 @@
           <select class="browser-default" v-model="form.age">
             <option value="" disabled age>Possible age</option>
             <option
-                v-for="age in 85"
+                v-for="age in 90"
                 :key="age"
                 :class="$v.form.age.$error ? 'invalid-feedback' : ''"
             >{{ age }}
@@ -84,24 +84,24 @@ export default {
   data() {
     return {
       form: {
-        first_name: '',
-        last_name: '',
+        firstName: '',
+        lastName: '',
         age: '',
       },
       responseStatusCode: null,
-      responseMsg: null,
+      responseMessage: null,
       submitted: false,
     }
   },
   validations: {
     form: {
-      first_name: {required, minLength: minLength(3)},
-      last_name: {required, minLength: minLength(3)},
+      firstName: {required, minLength: minLength(3)},
+      lastName: {required, minLength: minLength(3)},
       age: {required},
     }
   },
   methods: {
-    async submitStudent() {
+    async addStudent() {
       this.$v.form.$touch();
 
       if (!this.$v.form.$error) {
@@ -109,15 +109,15 @@ export default {
         const {...form} = this.form;
         try {
           let res = await studentsModule(instance).addStudent({
-            first_name: form.first_name,
-            last_name: form.last_name,
+            first_name: form.firstName,
+            last_name: form.lastName,
             age: form.age,
           });
           this.responseStatusCode = res.data.status;
-          this.responseMsg = res.data.message;
+          this.responseMessage = res.data.message;
         } catch (err) {
           this.responseStatusCode = err.response.data.status;
-          this.responseMsg = err.response.data.message;
+          this.responseMessage = err.response.data.message;
         }
 
         if (this.responseStatusCode) {
@@ -212,5 +212,4 @@ html
   &.error
     background-color: $var4
     color: $var2
-
 </style>

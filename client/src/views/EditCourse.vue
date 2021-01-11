@@ -4,17 +4,17 @@
 
     <div v-if="submitted">
       <div v-if="responseStatusCode" class="materialert success">
-        {{ this.responseMsg }}
+        {{ this.responseMessage }}
       </div>
 
       <div v-else class="materialert error">
-        {{ this.responseMsg }}
+        {{ this.responseMessage }}
       </div>
     </div>
 
     <div class="row">
       <form
-          @submit.prevent="checkSubmit"
+          @submit.prevent="editCourse"
           class="col s12"
       >
         <div class="row">
@@ -78,7 +78,7 @@ import instance from "@/api/instance";
 
 export default {
   mixins: [validationMixin],
-  name: 'CreateCourse',
+  name: 'AddCourse',
   data() {
     return {
       form: {
@@ -89,7 +89,7 @@ export default {
         course_id: this.$route.params.course_id,
       },
       responseStatusCode: null,
-      responseMsg: null,
+      responseMessage: null,
       submitted: false,
     }
   },
@@ -104,22 +104,25 @@ export default {
     clickSelect() {
       this.form.times = this.getCourseTimes();
     },
-    async checkSubmit() {
+    async editCourse() {
       this.$v.form.$touch()
+
       if (!this.$v.form.$error) {
         this.submitted = true;
         const {...form} = this.form;
+
         try {
           let res = await coursesModule(instance).changeCourse({
             name: form.name,
             description: form.description,
             time: form.time,
           }, form.course_id);
+
           this.responseStatusCode = res.data.status;
-          this.responseMsg = res.data.message;
+          this.responseMessage = res.data.message;
         } catch (err) {
           this.responseStatusCode = err.response.data.status;
-          this.responseMsg = err.response.data.message;
+          this.responseMessage = err.response.data.message;
         }
 
         if (this.responseStatusCode) {
@@ -134,6 +137,7 @@ export default {
       const result = [];
       let time = 8.00;
       let count = 0;
+
       times.push(time);
 
       for (let i = 0; i < 35; i++) {

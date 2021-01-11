@@ -1,14 +1,14 @@
 <template>
   <div>
     <div class="top-box">
-      <h1 class="top-box__title">Сourses</h1>
-      <a class="btn-floating btn-large waves-effect teal accent-4" @click="$router.push({name: 'CreateCourse'})">+</a>
+      <h1 class="top-box__title">Courses</h1>
+      <a class="btn-floating btn-large waves-effect teal accent-4" @click="$router.push({name: 'AddCourse'})">+</a>
     </div>
     <div class="box-courses">
       <ul v-if="courses.length" class="box-courses__list">
         <div
-            v-for="course in courses"
-            :key="course.id"
+            v-for="(course, index) in courses"
+            :key="index"
             class="box-item"
         >
           <li class="box-courses__item">
@@ -28,13 +28,10 @@
 
 <script>
 import {mapActions} from 'vuex';
-import {validationMixin} from 'vuelidate'
-import {required, minLength} from 'vuelidate/lib/validators'
 import coursesModule from "../api/courses";
 import instance from "../api/instance";
 
 export default {
-  mixins: [validationMixin],
   name: 'Courses',
   data() {
     return {}
@@ -42,13 +39,6 @@ export default {
   computed: {
     courses() {
       return this.$store.getters.getCourses;
-    }
-  },
-  validations: {
-    form: {
-      edit_name: {required, minLength: minLength(3)},
-      edit_desc: {required, minLength: minLength(10)},
-      selectedTime: {required},
     }
   },
   methods: {
@@ -127,5 +117,4 @@ export default {
 
 #course_name.invalid-feedback
   border-bottom: 1px solid red
-
 </style>

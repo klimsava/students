@@ -4,17 +4,17 @@
 
     <div v-if="submitted">
       <div v-if="responseStatusCode" class="materialert success">
-        {{ this.responseMsg }}
+        {{ this.responseMessage }}
       </div>
 
       <div v-else class="materialert error">
-        {{ this.responseMsg }}
+        {{ this.responseMessage }}
       </div>
     </div>
 
     <div class="row">
       <form
-          @submit.prevent="checkSubmit"
+          @submit.prevent="addCourse"
           class="col s12"
       >
         <div class="row">
@@ -34,11 +34,11 @@
         </div>
         <div class="row">
           <label>Select a time</label>
-          <select class="browser-default" v-model="form.time" @click="clickSelect()">
+          <select class="browser-default" v-model="form.time" @click="selectCourseTime()">
             <option value="" disabled time>Possible time</option>
             <option
-                v-for="time in form.times"
-                :key="time"
+                v-for="(time, index) in form.times"
+                :key="index"
             >{{ time }}
             </option>
           </select>
@@ -73,12 +73,12 @@
 <script>
 import {validationMixin} from 'vuelidate'
 import {required, minLength} from 'vuelidate/lib/validators'
-import instance from "@/api/instance";
+import instance from "../api/instance";
 import coursesModule from '../api/courses';
 
 export default {
   mixins: [validationMixin],
-  name: 'CreateCourse',
+  name: 'AddCourse',
   data() {
     return {
       form: {
@@ -88,7 +88,7 @@ export default {
         description: ''
       },
       responseStatusCode: null,
-      responseMsg: null,
+      responseMessage: null,
       submitted: false,
     }
   },
@@ -100,25 +100,28 @@ export default {
     }
   },
   methods: {
-    clickSelect() {
+    selectCourseTime() {
       this.form.times = this.getCourseTimes();
     },
-    async checkSubmit() {
+    async addCourse() {
       this.$v.form.$touch()
+
       if (!this.$v.form.$error) {
         this.submitted = true;
         const {...form} = this.form;
+
         try {
-          let res = await coursesModule(instance).addCourse({
+          let res = await coursesModule(instance).AddCourse({
             name: form.name,
             description: form.description,
             time: form.time,
           });
+
           this.responseStatusCode = res.data.status;
-          this.responseMsg = res.data.message;
+          this.responseMessage = res.data.message;
         } catch (err) {
           this.responseStatusCode = err.response.data.status;
-          this.responseMsg = err.response.data.message;
+          this.responseMessage = err.response.data.message;
         }
 
         if (this.responseStatusCode) {
@@ -188,7 +191,6 @@ $var1: #039be5
 $var2: #ffffff
 $var3: #43a047
 $var4: #c62828
-
 html
   line-height: 1.5
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif

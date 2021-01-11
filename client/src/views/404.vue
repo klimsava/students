@@ -6,14 +6,14 @@
 
 <script>
 export default {
-name: "404"
+  name: "404"
 }
 </script>
 
 <style lang="sass" scoped>
-  .not-fount
-    font-size: 30px
-    font-weight: bold
-    text-transform: uppercase
-    color: #bf1616
+.not-fount
+  font-size: 30px
+  font-weight: bold
+  text-transform: uppercase
+  color: #bf1616
 </style>

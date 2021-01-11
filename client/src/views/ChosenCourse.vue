@@ -1,19 +1,19 @@
 <template>
   <div>
-    <h1>Сhoose your course</h1>
+    <h1>Choose your course</h1>
 
     <div v-if="submitted">
       <div v-if="responseStatusCode" class="materialert success">
-        {{ this.responseMsg }}
+        {{ this.responseMessage }}
       </div>
 
       <div v-else class="materialert error">
-        {{ this.responseMsg }}
+        {{ this.responseMessage }}
       </div>
     </div>
 
     <form
-        @submit.prevent="checkSubmit"
+        @submit.prevent="selectCourse"
     >
       <ul
           class="collection"
@@ -28,7 +28,7 @@
           </div>
           <label class="checkboxCourse">
             <input
-                type="checkbox"
+                type="radio"
                 :value="course.id"
                 id="course.id"
                 v-model="object.checkedCategories"
@@ -54,18 +54,17 @@ import {mapActions} from "vuex";
 import studentsModule from "../api/students";
 import instance from "../api/instance";
 
-
 export default {
-  name: "ChosenCourse",
+  name: 'ChosenCourse',
   data() {
     return {
       object: {
         studentId: this.$route.params.profile_id,
-        checkedCategories: [],
+        checkedCategories: null,
         selected: false,
       },
       responseStatusCode: null,
-      responseMsg: null,
+      responseMessage: null,
       submitted: false,
     }
   },
@@ -80,20 +79,22 @@ export default {
       check: function (event) {
         console.log(event);
       },
-      async checkSubmit() {
+      async selectCourse() {
         if (this.object.checkedCategories.length !== 0) {
           this.object.selected = false;
           this.submitted = true;
+
           try {
-            let res = await studentsModule(instance).selectedCourse({
+            let res = await studentsModule(instance).selectCourse({
               studentId: this.object.studentId,
               courseId: this.object.checkedCategories,
             });
+
             this.responseStatusCode = res.data.status;
-            this.responseMsg = res.data.message;
+            this.responseMessage = res.data.message;
           } catch (err) {
             this.responseStatusCode = err.response.data.status;
-            this.responseMsg = err.response.data.message;
+            this.responseMessage = err.response.data.message;
           }
 
           if (this.responseStatusCode) {
@@ -130,12 +131,10 @@ export default {
 .checkboxError
   display: block
   color: red
-
 $var1: #039be5
 $var2: #ffffff
 $var3: #43a047
 $var4: #c62828
-
 html
   line-height: 1.5
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif
